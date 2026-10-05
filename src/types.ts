@@ -3,6 +3,7 @@ export type FlightStatus = 'On Time' | 'Delayed' | 'Landed' | 'Cancelled';
 export interface Flight {
   id: string;
   airline: string;
+  airlineIata?: string | null;
   flightNumber: string;
 
   departure: {
@@ -10,6 +11,8 @@ export interface Flight {
     airportCode: string;
     timeLocal: string; // ISO 8601 string representing local time
     timezone: string; // IANA timezone string e.g., 'America/Los_Angeles'
+    scheduled: string;
+    estimated?: string | null;
     terminal?: string | null;
     gate?: string | null;
     delay?: number | null; // minutes late
@@ -21,6 +24,8 @@ export interface Flight {
     airportCode: string;
     timeLocal: string; // ISO 8601 string representing local time
     timezone: string; // IANA timezone string e.g., 'Asia/Tokyo'
+    scheduled: string;
+    estimated?: string | null;
     terminal?: string | null;
     gate?: string | null;
     baggage?: string | null; // baggage claim belt
@@ -28,8 +33,30 @@ export interface Flight {
     actual?: string | null;
   };
 
-  status: FlightStatus;
+   status: FlightStatus;
   aircraft?: string | null; // IATA aircraft type code e.g. 'B77W'
+  registration?: string | null;
+  icao24?: string | null;
+
+  live?: AviationStackLive | null;
+  track?: FlightTrackPoint[];
+  departureAirport?: FlightAirport;
+  arrivalAirport?: FlightAirport;
+}
+
+export interface FlightTrackPoint {
+  latitude: number;
+  longitude: number;
+  altitude?: number | null;
+  heading?: number | null;
+  timestamp?: number | null;
+}
+
+export interface FlightAirport {
+  code?: string | null;
+  name?: string | null;
+  latitude: number;
+  longitude: number;
 }
 
 export interface ApiResponse<T> {
@@ -87,7 +114,7 @@ export interface AviationStackFlightInfo {
   number: string;
   iata: string;
   icao: string;
-  codeshared: any | null; // Using any for nested optional object if present
+  codeshared: unknown | null;
 }
 
 export interface AviationStackAircraft {
@@ -99,13 +126,21 @@ export interface AviationStackAircraft {
 
 export interface AviationStackLive {
   updated: string;
-  latitude: number;
-  longitude: number;
-  altitude: number;
-  direction: number;
-  speed_horizontal: number;
-  speed_vertical: number;
-  is_ground: boolean;
+  latitude: number | null;
+  longitude: number | null;
+  altitude: number | null;
+  direction: number | null;
+  speed_horizontal: number | null;
+  speed_vertical: number | null;
+  is_ground: boolean | null;
+  source?: 'aviationstack' | 'opensky';
+  velocity?: number | null;
+  heading?: number | null;
+  callsign?: string | null;
+  timePosition?: number | null;
+  lastContact?: number | null;
+  geoAltitude?: number | null;
+  stateAge?: number | null;
 }
 
 export interface AviationStackFlight {

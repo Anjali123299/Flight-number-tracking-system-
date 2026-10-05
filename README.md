@@ -1,4 +1,6 @@
-# Aero — Flight Tracker
+# Flight Number Tracking System
+
+✈️ A web-based flight status tracking system for searching flights and viewing flight information and locations on an interactive map.
 
 A real-time flight status tracker built with Next.js. Search by flight number (e.g. `AA123`) or airport IATA code (e.g. `JFK`) to get live departure/arrival times, terminal and gate info, baggage claim, and timezone conversions.
 
@@ -12,6 +14,8 @@ A real-time flight status tracker built with Next.js. Search by flight number (e
 - **+N day badge** — overnight and international flights show a `+1` / `+2` indicator on arrival
 - **Terminal, gate & baggage** — surfaces terminal, gate, and baggage claim belt from the API when available
 - **Aircraft type** — shows IATA aircraft type code (e.g. `B77W`, `A388`)
+- **Interactive flight map** — view aircraft positions, recorded flight paths, and departure/arrival airports when location data is available
+- **Aircraft tracking** — supplements flight data with aircraft positions and tracks from OpenSky when an aircraft identifier is available
 - **Recent search history** — last 5 searches saved to localStorage for quick access
 - **URL state** — search query persists in `?q=` so searches are shareable and survive refresh
 - **Loading skeletons** — shimmer placeholders during fetch
@@ -30,7 +34,8 @@ A real-time flight status tracker built with Next.js. Search by flight number (e
 | Language | TypeScript 5 (strict) |
 | Date/Timezone | date-fns 4, date-fns-tz 3 |
 | Icons | Lucide React |
-| Flight data | [AviationStack API](https://aviationstack.com/) |
+| Flight data | [AviationStack API](https://aviationstack.com/) and [OpenSky Network](https://opensky-network.org/) |
+| Maps | Leaflet, React Leaflet, and OpenStreetMap/CARTO tiles |
 | Font | DM Sans (Google Fonts) |
 
 ---
@@ -86,12 +91,14 @@ src/
 │   └── globals.css            # Tailwind v4, glass utility, animations
 ├── components/
 │   ├── FlightCard.tsx         # Full flight detail card (times, date, +1, gate, etc.)
+│   ├── FlightMap.tsx          # Interactive aircraft, route, and airport map
 │   ├── FlightListItem.tsx     # Compact row for overflow results
 │   ├── FlightSearch.tsx       # Search input + recent history + sample chips
 │   ├── FlightSkeleton.tsx     # Loading placeholder
 │   └── ShaderBackground.tsx  # CSS gradient orb background
 ├── lib/
 │   ├── flights.ts             # AviationStack fetch, in-memory cache, mock fallback
+│   ├── opensky.ts             # OpenSky live aircraft positions and track history
 │   └── utils.ts               # cn(), date formatting helpers
 └── types.ts                   # Flight, ApiResponse, AviationStack API interfaces
 ```

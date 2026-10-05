@@ -4,8 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import { Search, X, Sparkles, Clock, MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Flight number: 2-3 letter airline code + 1-4 digits  (e.g. AA123, BA4)
-const FLIGHT_REGEX = /^[A-Z]{2,3}\d{1,4}$/i;
+// Flight number: 1-3 alphanumeric airline characters, including at least one
+// letter, followed by 1-4 digits (e.g. 6E2134, AI123, BA4).
+const FLIGHT_REGEX = /^(?=[A-Z0-9]{1,3}\d{1,4}$)(?=.*[A-Z])[A-Z0-9]{1,3}\d{1,4}$/i;
 // Airport IATA code: exactly 3 letters  (e.g. JFK, LAX)
 const AIRPORT_REGEX = /^[A-Z]{3}$/i;
 
@@ -95,7 +96,7 @@ export function FlightSearch({ onSearch, isLoading, defaultValue = '' }: FlightS
             if (FLIGHT_REGEX.test(value) || AIRPORT_REGEX.test(value)) {
                 triggerSearch(value);
             } else {
-                setError('Enter a flight number (e.g. AA123) or airport code (e.g. JFK)');
+                setError('Enter a flight number (e.g. 6E2134) or airport code (e.g. JFK)');
             }
         }, 600);
     };
@@ -109,7 +110,7 @@ export function FlightSearch({ onSearch, isLoading, defaultValue = '' }: FlightS
         if (FLIGHT_REGEX.test(inputVal) || AIRPORT_REGEX.test(inputVal)) {
             triggerSearch(inputVal);
         } else {
-            setError('Enter a flight number (e.g. AA123) or airport code (e.g. JFK)');
+            setError('Enter a flight number (e.g. 6E2134) or airport code (e.g. JFK)');
         }
     };
 
